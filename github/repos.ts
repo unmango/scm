@@ -1,5 +1,5 @@
 import { RepositoryPages } from '@pulumi/github/types/input';
-import { PublicRepo } from './components';
+import { PrivateRepo, PublicRepo } from './components';
 
 const legacyGhPages: RepositoryPages = {
 	buildType: 'legacy',
@@ -24,6 +24,11 @@ export const apis = new PublicRepo('apis', {
 	description: 'Public API definitions',
 	topics: ['api', 'protobuf', 'grpc', 'openapi'],
 	githubChecks: ['check'],
+});
+
+// Private: it describes home hardware and network layout.
+export const architecture = new PrivateRepo('architecture', {
+	description: 'Models of unmango repositories, running software, hardware, network, and plans for change',
 });
 
 export const charts = new PublicRepo('charts', {
