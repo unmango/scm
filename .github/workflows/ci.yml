@@ -40,20 +40,6 @@ jobs:
         if: github.event_name == 'pull_request'
         run: nix develop -c make lint
 
-      # TEMPORARY: print the OIDC claims Pulumi receives, to debug the 401. Remove before merge.
-      - name: Debug OIDC claims
-        run: |
-          nix develop -c node -e '
-            const url = process.env.ACTIONS_ID_TOKEN_REQUEST_URL + "&audience=urn:pulumi:org:UnstoppableMango";
-            fetch(url, { headers: { Authorization: "bearer " + process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN } })
-              .then(r => r.json())
-              .then(({ value }) => {
-                const c = JSON.parse(Buffer.from(value.split(".")[1], "base64url").toString());
-                const { iss, aud, sub, repository, repository_id, repository_owner, job_workflow_ref } = c;
-                console.log(JSON.stringify({ iss, aud, sub, repository, repository_id, repository_owner, job_workflow_ref }, null, 2));
-              });
-          '
-
       - name: Pulumi login
         uses: pulumi/auth-actions@v2
         with:
