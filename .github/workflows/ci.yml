@@ -29,9 +29,6 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v15
-
       - name: Dprint check
         if: github.event_name == 'pull_request'
         run: nix develop -c dprint check
