@@ -63,7 +63,12 @@ export abstract class Repo extends ComponentResource {
 				name: label,
 				color,
 				description,
-			}, { parent: this })
+			}, {
+				parent: this,
+				// Renaming the repository replaces each label, and GitHub carries the
+				// labels over. Created first, the old one's delete would remove it again.
+				deleteBeforeReplace: true,
+			})
 		);
 
 		this.repo = repo;
