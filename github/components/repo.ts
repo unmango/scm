@@ -11,11 +11,20 @@ export interface RepoArgs {
 	repoOptions?: CustomResourceOptions;
 	/** Whether Dependabot raises alerts for the repository. Defaults to enabled. */
 	vulnerabilityAlerts?: Input<boolean>;
+	/** Issue labels to manage on the repository, keyed by label name. */
+	labels?: Record<string, IssueLabel>;
+}
+
+export interface IssueLabel {
+	/** Hex color without the leading `#`. */
+	color: Input<string>;
+	description?: Input<string>;
 }
 
 export abstract class Repo extends ComponentResource {
 	public readonly repo!: gh.Repository;
 	public readonly vulnerabilityAlerts!: gh.RepositoryVulnerabilityAlerts;
+	public readonly labels!: gh.IssueLabel[];
 
 	constructor(type: string, name: string, args: RepoArgs, opts?: ComponentResourceOptions) {
 		super(type, name, args, opts);
@@ -48,7 +57,17 @@ export abstract class Repo extends ComponentResource {
 			deleteBeforeReplace: true,
 		});
 
+		const labels = Object.entries(args.labels ?? {}).map(([label, { color, description }]) =>
+			new gh.IssueLabel(`${name}-${label}`, {
+				repository: repo.name,
+				name: label,
+				color,
+				description,
+			}, { parent: this })
+		);
+
 		this.repo = repo;
 		this.vulnerabilityAlerts = vulnerabilityAlerts;
+		this.labels = labels;
 	}
 }

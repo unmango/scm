@@ -1,5 +1,6 @@
 import { RepositoryPages } from '@pulumi/github/types/input';
 import { PrivateRepo, PublicRepo } from './components';
+import { triageLabels } from './labels';
 
 const legacyGhPages: RepositoryPages = {
 	buildType: 'legacy',
@@ -69,6 +70,7 @@ export const game = new PublicRepo('game', {
 	githubChecks: ['Build and Test'],
 	// The architecture site, deployed by the repository's pages workflow.
 	pages: { buildType: 'workflow' },
+	labels: triageLabels,
 });
 
 export const go = new PublicRepo('go', {
