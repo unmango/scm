@@ -6,7 +6,7 @@ import {
 	RepositoryTemplate,
 } from '@pulumi/github/types/input';
 import { ComponentResourceOptions, CustomResourceOptions, Input, output } from '@pulumi/pulumi';
-import { Repo } from './repo';
+import { IssueLabel, Repo } from './repo';
 
 const integrationIds = {
 	github: 15368,
@@ -38,6 +38,8 @@ export interface PublicRepoArgs {
 	rulesetOptions?: CustomResourceOptions;
 	/** Whether Dependabot raises alerts for the repository. Defaults to enabled. */
 	vulnerabilityAlerts?: Input<boolean>;
+	/** Issue labels to manage on the repository, keyed by label name. */
+	labels?: Record<string, IssueLabel>;
 }
 
 export class PublicRepo extends Repo {
@@ -63,6 +65,7 @@ export class PublicRepo extends Repo {
 				},
 				repoOptions: args.repoOptions,
 				vulnerabilityAlerts: args.vulnerabilityAlerts,
+				labels: args.labels,
 			},
 			opts,
 		);
@@ -71,6 +74,7 @@ export class PublicRepo extends Repo {
 
 		const repo = this.repo;
 		const vulnerabilityAlerts = this.vulnerabilityAlerts;
+		const labels = this.labels;
 		const statusChecks = args.requiredChecks
 			? getRequiredStatusChecks(args.requiredChecks)
 			: getGitHubStatusChecks(args.githubChecks ?? defaultGitHubChecks);
@@ -108,6 +112,7 @@ export class PublicRepo extends Repo {
 			repo,
 			mainRuleset,
 			vulnerabilityAlerts,
+			labels,
 		});
 	}
 }
