@@ -169,6 +169,7 @@ export const scm = new PublicRepo('scm', {
 	description: 'unmango source control infrastructure',
 	topics: ['pulumi', 'iac', 'github'],
 	githubChecks: ['pulumi'],
+	labels: triageLabels,
 });
 
 export const slip = new PublicRepo('slip', {
