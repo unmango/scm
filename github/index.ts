@@ -21,19 +21,23 @@ for (const [secretName, plaintextValue] of Object.entries(releaseSigningSecrets)
 	});
 }
 
-// release-please tags provider releases with the release app's token, because a
-// tag pushed with GITHUB_TOKEN does not start the goreleaser workflow.
+// release-please tags releases with the release app's token, because a tag pushed
+// with GITHUB_TOKEN does not start the workflow that publishes the release: goreleaser
+// for the providers, the chart and image for wishlists. wishlists isn't declared in
+// repos.ts yet, so its ID is looked up.
+const wishlists = gh.getRepositoryOutput({ fullName: 'unmango/wishlists' });
+const releaseAppRepoIds = [...providerRepos.map(x => x.repo.repoId), wishlists.repoId];
 new gh.ActionsOrganizationVariable('RELEASE_APP_CLIENT_ID', {
 	variableName: 'RELEASE_APP_CLIENT_ID',
 	value: config.require('releaseAppClientId'),
 	visibility: 'selected',
-	selectedRepositoryIds: providerRepos.map(x => x.repo.repoId),
+	selectedRepositoryIds: releaseAppRepoIds,
 });
 new gh.ActionsOrganizationSecret('RELEASE_APP_PRIVATE_KEY', {
 	secretName: 'RELEASE_APP_PRIVATE_KEY',
 	plaintextValue: config.requireSecret('releaseAppPrivateKey'),
 	visibility: 'selected',
-	selectedRepositoryIds: providerRepos.map(x => x.repo.repoId),
+	selectedRepositoryIds: releaseAppRepoIds,
 });
 
 // wishlists isn't declared in repos.ts yet, so its labels stand alone until it
