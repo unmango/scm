@@ -1,5 +1,6 @@
 import * as gh from '@pulumi/github';
 import { Config, output } from '@pulumi/pulumi';
+import { wayfinderLabels } from './labels';
 import * as allRepos from './repos';
 import { terraformProviderAtproto, terraformProviderNetgear } from './repos';
 
@@ -34,5 +35,20 @@ new gh.ActionsOrganizationSecret('RELEASE_APP_PRIVATE_KEY', {
 	visibility: 'selected',
 	selectedRepositoryIds: providerRepos.map(x => x.repo.repoId),
 });
+
+// wishlists isn't declared in repos.ts yet, so its labels stand alone until it
+// is adopted. `wayfinder:map` was made by hand before the rest.
+const wishlistsLabelImports: Record<string, string> = {
+	'wayfinder:map': 'wishlists:wayfinder:map',
+};
+for (const [name, { color, description }] of Object.entries(wayfinderLabels)) {
+	const id = wishlistsLabelImports[name];
+	new gh.IssueLabel(`wishlists-${name}`, {
+		repository: 'wishlists',
+		name,
+		color,
+		description,
+	}, id ? { import: id } : undefined);
+}
 
 export const repos = output(Object.values(allRepos).map(x => x.repo.name)).apply(names => [...names].sort());

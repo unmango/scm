@@ -11,3 +11,17 @@ export const triageLabels: Record<string, IssueLabel> = {
 	'ready-for-agent': { color: '0e8a16', description: 'Fully specified, ready for an AFK agent' },
 	'ready-for-human': { color: '1d76db', description: 'Requires human implementation' },
 };
+
+/**
+ * The ticket types the wayfinder agent skill charts a map with: `map` marks the
+ * map issue itself, and each child ticket carries one of the others.
+ */
+export const wayfinderLabels: Record<string, IssueLabel> = {
+	// Matches the label as it was made by hand, so the import in index.ts adopts
+	// it unchanged.
+	'wayfinder:map': { color: 'ededed' },
+	'wayfinder:research': { color: 'c5def5', description: 'Wayfinder ticket: surface a fact a decision waits on' },
+	'wayfinder:prototype': { color: 'bfd4f2', description: 'Wayfinder ticket: a rough artifact to react to' },
+	'wayfinder:grilling': { color: 'd4c5f9', description: 'Wayfinder ticket: decided in conversation' },
+	'wayfinder:task': { color: 'fef2c0', description: 'Wayfinder ticket: work that unblocks a decision' },
+};
