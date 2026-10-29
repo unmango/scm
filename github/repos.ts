@@ -18,7 +18,6 @@ export const actions = new PublicRepo('actions', {
 export const aferox = new PublicRepo('aferox', {
 	description: 'Implementations and utilities for github.com/spf13/afero',
 	githubChecks: ['Build and Test'],
-	labelImports: { 'ready-for-agent': 'go:ready-for-agent' },
 });
 
 export const apis = new PublicRepo('apis', {
@@ -75,6 +74,7 @@ export const game = new PublicRepo('game', {
 export const go = new PublicRepo('go', {
 	description: 'Random Go crap',
 	githubChecks: ['Build and Test'],
+	labelImports: { 'ready-for-agent': 'go:ready-for-agent' },
 });
 
 export const goMake = new PublicRepo('go-make', {
