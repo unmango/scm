@@ -40,6 +40,12 @@ export interface PublicRepoArgs {
 	vulnerabilityAlerts?: Input<boolean>;
 	/** Issue labels to manage on the repository, keyed by label name. */
 	labels?: Record<string, IssueLabel>;
+	/** Whether the repository gets the triage labels. Defaults to true. */
+	triageLabels?: boolean;
+	/** Whether the repository gets the wayfinder labels. Defaults to true. */
+	wayfinderLabels?: boolean;
+	/** Import IDs (`<repo>:<label>`) of labels made by hand, keyed by label. */
+	labelImports?: Record<string, string>;
 }
 
 export class PublicRepo extends Repo {
@@ -66,6 +72,9 @@ export class PublicRepo extends Repo {
 				repoOptions: args.repoOptions,
 				vulnerabilityAlerts: args.vulnerabilityAlerts,
 				labels: args.labels,
+				triageLabels: args.triageLabels,
+				wayfinderLabels: args.wayfinderLabels,
+				labelImports: args.labelImports,
 			},
 			opts,
 		);

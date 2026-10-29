@@ -1,6 +1,6 @@
 import * as gh from '@pulumi/github';
 import { Config, output } from '@pulumi/pulumi';
-import { wayfinderLabels } from './labels';
+import { triageLabels, wayfinderLabels } from './labels';
 import * as allRepos from './repos';
 import { terraformProviderAtproto, terraformProviderNetgear } from './repos';
 
@@ -41,7 +41,7 @@ new gh.ActionsOrganizationSecret('RELEASE_APP_PRIVATE_KEY', {
 const wishlistsLabelImports: Record<string, string> = {
 	'wayfinder:map': 'wishlists:wayfinder:map',
 };
-for (const [name, { color, description }] of Object.entries(wayfinderLabels)) {
+for (const [name, { color, description }] of Object.entries({ ...triageLabels, ...wayfinderLabels })) {
 	const id = wishlistsLabelImports[name];
 	new gh.IssueLabel(`wishlists-${name}`, {
 		repository: 'wishlists',
