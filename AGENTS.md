@@ -58,6 +58,10 @@ Repo (abstract base)
 
 **`github/repos.ts`** — Instantiates all managed repos as `PublicRepo` or `PrivateRepo` with their specific status check names, one exported const each.
 
+**`github/community.ts`** — Commits the org's default community health files (`github/community/*`: the AI contribution policy, contributing guide, and PR template) to `unmango/.github`. Edit the policy there; the glossary for it is `CONTEXT.md`.
+
+**`github/labels.ts`** — Labels every repo gets by default: AI disclosure (`ai-assisted`), triage, and wayfinder.
+
 **`github/index.ts`** — Organization-level resources (Actions secrets) and the `repos` stack output, derived from every export of `repos.ts`.
 
 ### Authentication

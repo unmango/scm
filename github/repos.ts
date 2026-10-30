@@ -10,6 +10,20 @@ const legacyGhPages: RepositoryPages = {
 	},
 };
 
+// The GitHub App this program authenticates as, from github:appAuth in Pulumi.prod.yaml.
+const scmAppId = 1264044;
+
+// Holds the org's default community health files: the AI contribution policy,
+// contributing guide, and pull request template every repository without its
+// own inherits. github/community.ts commits them, so the app bypasses the ruleset.
+export const dotGithub = new PublicRepo('dotgithub', {
+	repoName: '.github',
+	description: 'Default community health files for unmango repositories',
+	githubChecks: [],
+	autoInit: true,
+	rulesetBypassActors: [{ actorId: scmAppId, actorType: 'Integration', bypassMode: 'always' }],
+});
+
 export const actions = new PublicRepo('actions', {
 	description: 'Blessed GitHub Actions',
 	githubChecks: ['check'],

@@ -1,6 +1,7 @@
 import * as gh from '@pulumi/github';
 import {
 	RepositoryPages,
+	RepositoryRulesetBypassActor,
 	RepositoryRulesetRules,
 	RepositoryRulesetRulesRequiredStatusChecks,
 	RepositoryTemplate,
@@ -30,16 +31,22 @@ export interface PublicRepoArgs {
 	githubChecks?: Input<Input<string>[]>;
 	requiredChecks?: RepositoryRulesetRulesRequiredStatusChecks['requiredChecks'];
 	template?: RepositoryTemplate;
+	/** Whether GitHub makes an initial commit, so the default branch exists for files committed by this program. */
+	autoInit?: Input<boolean>;
 	pages?: RepositoryPages;
 	topics?: Input<Input<string>[]>;
 	/** Passed through to the repository resource, for adopting one that already exists. */
 	repoOptions?: CustomResourceOptions;
+	/** Actors that may bypass the `main` ruleset, such as an app that commits files to it directly. */
+	rulesetBypassActors?: Input<Input<RepositoryRulesetBypassActor>[]>;
 	/** Passed through to the `main` ruleset resource, for adopting one that already exists. */
 	rulesetOptions?: CustomResourceOptions;
 	/** Whether Dependabot raises alerts for the repository. Defaults to enabled. */
 	vulnerabilityAlerts?: Input<boolean>;
 	/** Issue labels to manage on the repository, keyed by label name. */
 	labels?: Record<string, IssueLabel>;
+	/** Whether the repository gets the AI contribution disclosure labels. Defaults to true. */
+	disclosureLabels?: boolean;
 	/** Whether the repository gets the triage labels. Defaults to true. */
 	triageLabels?: boolean;
 	/** Whether the repository gets the wayfinder labels. Defaults to true. */
@@ -66,12 +73,14 @@ export class PublicRepo extends Repo {
 					visibility: 'public',
 					allowAutoMerge: true,
 					template: args.template,
+					autoInit: args.autoInit,
 					pages: args.pages,
 					topics: args.topics,
 				},
 				repoOptions: args.repoOptions,
 				vulnerabilityAlerts: args.vulnerabilityAlerts,
 				labels: args.labels,
+				disclosureLabels: args.disclosureLabels,
 				triageLabels: args.triageLabels,
 				wayfinderLabels: args.wayfinderLabels,
 				labelImports: args.labelImports,
@@ -95,6 +104,7 @@ export class PublicRepo extends Repo {
 				repository: repo.name,
 				enforcement: 'active',
 				target: 'branch',
+				bypassActors: args.rulesetBypassActors,
 				conditions: {
 					refName: {
 						includes: ['~DEFAULT_BRANCH'],

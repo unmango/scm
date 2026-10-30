@@ -1,7 +1,9 @@
 import { ComponentResourceOptions, Input } from '@pulumi/pulumi';
 import { Repo, RepoArgs } from './repo';
 
-export interface PrivateRepoArgs extends Pick<RepoArgs, 'triageLabels' | 'wayfinderLabels' | 'labelImports'> {
+type LabelArgs = 'disclosureLabels' | 'triageLabels' | 'wayfinderLabels' | 'labelImports';
+
+export interface PrivateRepoArgs extends Pick<RepoArgs, LabelArgs> {
 	description: Input<string>;
 }
 
@@ -13,6 +15,7 @@ export class PrivateRepo extends Repo {
 				description: args.description,
 				visibility: 'private',
 			},
+			disclosureLabels: args.disclosureLabels,
 			triageLabels: args.triageLabels,
 			wayfinderLabels: args.wayfinderLabels,
 			labelImports: args.labelImports,
