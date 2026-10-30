@@ -20,6 +20,7 @@ export const dotGithub = new PublicRepo('dotgithub', {
 	repoName: '.github',
 	description: 'Default community health files for unmango repositories',
 	githubChecks: [],
+	autoInit: true,
 	rulesetBypassActors: [{ actorId: scmAppId, actorType: 'Integration', bypassMode: 'always' }],
 });
 

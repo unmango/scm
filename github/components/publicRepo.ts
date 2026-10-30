@@ -31,6 +31,8 @@ export interface PublicRepoArgs {
 	githubChecks?: Input<Input<string>[]>;
 	requiredChecks?: RepositoryRulesetRulesRequiredStatusChecks['requiredChecks'];
 	template?: RepositoryTemplate;
+	/** Whether GitHub makes an initial commit, so the default branch exists for files committed by this program. */
+	autoInit?: Input<boolean>;
 	pages?: RepositoryPages;
 	topics?: Input<Input<string>[]>;
 	/** Passed through to the repository resource, for adopting one that already exists. */
@@ -71,6 +73,7 @@ export class PublicRepo extends Repo {
 					visibility: 'public',
 					allowAutoMerge: true,
 					template: args.template,
+					autoInit: args.autoInit,
 					pages: args.pages,
 					topics: args.topics,
 				},

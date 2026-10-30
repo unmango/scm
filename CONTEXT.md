@@ -18,13 +18,13 @@ A **Contribution** an agent authors and opens, with a human only reviewing it.
 _Avoid_: AI contribution, bot PR
 
 **Disclosure**:
-The submitter's statement that a **Contribution** is an **AI-assisted contribution** or an **Agent contribution**. A human discloses with the PR template checkbox; a **Maintainer agent** discloses with its co-author trailer and PR attribution block.
+The submitter's statement that a **Contribution** is an **AI-assisted contribution** or an **Agent contribution**. A human discloses with the PR template checkbox; a **Maintainer agent** discloses with its co-author trailer and PR attribution block, or in the text of an issue or review comment.
 
 **Substantive content**:
 AI output beyond line-level autocomplete. Its presence in a **Contribution** is what makes **Disclosure** required.
 
 **Maintainer agent**:
-An agent the maintainer runs, such as a Claude session, the thecluster-bot app, or an AFK agent working a `ready-for-agent` issue. Only a **Maintainer agent** may make an **Agent contribution**.
+An agent the maintainer runs, such as a Claude session, thecluster-bot, or an AFK agent working a `ready-for-agent` issue. Only a **Maintainer agent** may make an **Agent contribution**.
 _Avoid_: bot, our agents
 
 **Review bot**:
