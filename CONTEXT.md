@@ -18,7 +18,7 @@ A **Contribution** an agent authors and opens, with a human only reviewing it.
 _Avoid_: AI contribution, bot PR
 
 **Disclosure**:
-The submitter's statement that a **Contribution** is an **AI-assisted contribution** or an **Agent contribution**.
+The submitter's statement that a **Contribution** is an **AI-assisted contribution** or an **Agent contribution**. A human discloses with the PR template checkbox; a **Maintainer agent** discloses with its co-author trailer and PR attribution block.
 
 **Substantive content**:
 AI output beyond line-level autocomplete. Its presence in a **Contribution** is what makes **Disclosure** required.
