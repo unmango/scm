@@ -74,6 +74,7 @@ export const game = new PublicRepo('game', {
 export const go = new PublicRepo('go', {
 	description: 'Random Go crap',
 	githubChecks: ['Build and Test'],
+	labelImports: { 'ready-for-agent': 'go:ready-for-agent' },
 });
 
 export const goMake = new PublicRepo('go-make', {
@@ -204,6 +205,7 @@ export const terraformProviderAtproto = new PublicRepo('terraform-provider-atpro
 	description: 'Terraform provider for AT Protocol records, with first-class Tangled support',
 	topics: ['terraform', 'opentofu', 'atproto', 'bluesky', 'tangled', 'go'],
 	githubChecks: ['build', 'codegen'],
+	labelImports: { 'needs-info': 'terraform-provider-atproto:needs-info' },
 });
 
 // Registry-locked name, do not shorten.
