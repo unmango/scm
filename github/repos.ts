@@ -1,6 +1,5 @@
 import { RepositoryPages } from '@pulumi/github/types/input';
 import { PrivateRepo, PublicRepo } from './components';
-import { triageLabels } from './labels';
 
 const legacyGhPages: RepositoryPages = {
 	buildType: 'legacy',
@@ -70,12 +69,12 @@ export const game = new PublicRepo('game', {
 	githubChecks: ['Build and Test'],
 	// The architecture site, deployed by the repository's pages workflow.
 	pages: { buildType: 'workflow' },
-	labels: triageLabels,
 });
 
 export const go = new PublicRepo('go', {
 	description: 'Random Go crap',
 	githubChecks: ['Build and Test'],
+	labelImports: { 'ready-for-agent': 'go:ready-for-agent' },
 });
 
 export const goMake = new PublicRepo('go-make', {
@@ -169,7 +168,6 @@ export const scm = new PublicRepo('scm', {
 	description: 'unmango source control infrastructure',
 	topics: ['pulumi', 'iac', 'github'],
 	githubChecks: ['pulumi'],
-	labels: triageLabels,
 });
 
 export const slip = new PublicRepo('slip', {
@@ -199,6 +197,7 @@ export const terraformProviderAtproto = new PublicRepo('terraform-provider-atpro
 	description: 'Terraform provider for AT Protocol records, with first-class Tangled support',
 	topics: ['terraform', 'opentofu', 'atproto', 'bluesky', 'tangled', 'go'],
 	githubChecks: ['build', 'codegen'],
+	labelImports: { 'needs-info': 'terraform-provider-atproto:needs-info' },
 });
 
 // Registry-locked name, do not shorten.

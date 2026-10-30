@@ -1,5 +1,6 @@
 import * as gh from '@pulumi/github';
 import { ComponentResource, ComponentResourceOptions, CustomResourceOptions, Input } from '@pulumi/pulumi';
+import { triageLabels, wayfinderLabels } from '../labels';
 
 export interface RepoArgs {
 	overrides: Partial<gh.RepositoryArgs>;
@@ -13,6 +14,12 @@ export interface RepoArgs {
 	vulnerabilityAlerts?: Input<boolean>;
 	/** Issue labels to manage on the repository, keyed by label name. */
 	labels?: Record<string, IssueLabel>;
+	/** Whether the repository gets the triage labels. Defaults to true. */
+	triageLabels?: boolean;
+	/** Whether the repository gets the wayfinder labels. Defaults to true. */
+	wayfinderLabels?: boolean;
+	/** Import IDs (`<repo>:<label>`) of labels made by hand, keyed by label. */
+	labelImports?: Record<string, string>;
 }
 
 export interface IssueLabel {
@@ -57,8 +64,14 @@ export abstract class Repo extends ComponentResource {
 			deleteBeforeReplace: true,
 		});
 
-		const labels = Object.entries(args.labels ?? {}).map(([label, { color, description }]) =>
-			new gh.IssueLabel(`${name}-${label}`, {
+		const allLabels = {
+			...(args.triageLabels === false ? {} : triageLabels),
+			...(args.wayfinderLabels === false ? {} : wayfinderLabels),
+			...args.labels,
+		};
+		const labels = Object.entries(allLabels).map(([label, { color, description }]) => {
+			const id = args.labelImports?.[label];
+			return new gh.IssueLabel(`${name}-${label}`, {
 				repository: repo.name,
 				name: label,
 				color,
@@ -68,8 +81,12 @@ export abstract class Repo extends ComponentResource {
 				// Renaming the repository replaces each label, and GitHub carries the
 				// labels over. Created first, the old one's delete would remove it again.
 				deleteBeforeReplace: true,
-			})
-		);
+				// An import fails unless its inputs match the label as it is, and a
+				// hand-made label's look is whatever it was made with. Adopt it as is;
+				// once the import is dropped, the next up brings it in line.
+				...(id && { import: id, ignoreChanges: ['color', 'description'] }),
+			});
+		});
 
 		this.repo = repo;
 		this.vulnerabilityAlerts = vulnerabilityAlerts;
