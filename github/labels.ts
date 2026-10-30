@@ -1,6 +1,15 @@
 import type { IssueLabel } from './components/repo';
 
 /**
+ * The labels a maintainer applies at triage to a contribution the AI
+ * contribution policy says must be disclosed. Every repository gets them unless
+ * it opts out.
+ */
+export const disclosureLabels: Record<string, IssueLabel> = {
+	'ai-assisted': { color: 'c2e0c6', description: 'Disclosed as produced with help from AI tools' },
+};
+
+/**
  * The triage roles the engineering agent skills apply, for repositories whose
  * `docs/agents/triage-labels.md` keeps the default names. Every repository gets
  * them unless it opts out. `wontfix` is left out because GitHub creates it with
