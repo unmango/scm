@@ -1,4 +1,5 @@
 import { RepositoryPages } from '@pulumi/github/types/input';
+import { Config } from '@pulumi/pulumi';
 import { PrivateRepo, PublicRepo } from './components';
 
 const legacyGhPages: RepositoryPages = {
@@ -10,8 +11,8 @@ const legacyGhPages: RepositoryPages = {
 	},
 };
 
-// The GitHub App this program authenticates as, from github:appAuth in Pulumi.prod.yaml.
-const scmAppId = 1264044;
+// The GitHub App this program authenticates as.
+const scmAppId = new Config('github').requireObject<{ id: number }>('appAuth').id;
 
 // Holds the org's default community health files: the AI contribution policy,
 // contributing guide, and pull request template every repository without its
