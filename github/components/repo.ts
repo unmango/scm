@@ -1,6 +1,6 @@
 import * as gh from '@pulumi/github';
 import { ComponentResource, ComponentResourceOptions, CustomResourceOptions, Input } from '@pulumi/pulumi';
-import { triageLabels, wayfinderLabels } from '../labels';
+import { disclosureLabels, triageLabels, wayfinderLabels } from '../labels';
 
 export interface RepoArgs {
 	overrides: Partial<gh.RepositoryArgs>;
@@ -14,6 +14,8 @@ export interface RepoArgs {
 	vulnerabilityAlerts?: Input<boolean>;
 	/** Issue labels to manage on the repository, keyed by label name. */
 	labels?: Record<string, IssueLabel>;
+	/** Whether the repository gets the AI contribution disclosure labels. Defaults to true. */
+	disclosureLabels?: boolean;
 	/** Whether the repository gets the triage labels. Defaults to true. */
 	triageLabels?: boolean;
 	/** Whether the repository gets the wayfinder labels. Defaults to true. */
@@ -65,6 +67,7 @@ export abstract class Repo extends ComponentResource {
 		});
 
 		const allLabels = {
+			...(args.disclosureLabels === false ? {} : disclosureLabels),
 			...(args.triageLabels === false ? {} : triageLabels),
 			...(args.wayfinderLabels === false ? {} : wayfinderLabels),
 			...args.labels,

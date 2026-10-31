@@ -1,4 +1,5 @@
 import { RepositoryPages } from '@pulumi/github/types/input';
+import { Config } from '@pulumi/pulumi';
 import { PrivateRepo, PublicRepo } from './components';
 
 const legacyGhPages: RepositoryPages = {
@@ -9,6 +10,20 @@ const legacyGhPages: RepositoryPages = {
 		path: '/',
 	},
 };
+
+// The GitHub App this program authenticates as.
+const scmAppId = new Config('github').requireObject<{ id: number }>('appAuth').id;
+
+// Holds the org's default community health files: the AI contribution policy,
+// contributing guide, and pull request template every repository without its
+// own inherits. github/community.ts commits them, so the app bypasses the ruleset.
+export const dotGithub = new PublicRepo('dotgithub', {
+	repoName: '.github',
+	description: 'Default community health files for unmango repositories',
+	githubChecks: [],
+	autoInit: true,
+	rulesetBypassActors: [{ actorId: scmAppId, actorType: 'Integration', bypassMode: 'always' }],
+});
 
 export const actions = new PublicRepo('actions', {
 	description: 'Blessed GitHub Actions',
