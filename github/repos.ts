@@ -163,6 +163,11 @@ export const pkgs = new PublicRepo('pkgs', {
 	vulnerabilityAlerts: false,
 });
 
+export const s4 = new PublicRepo('s4', {
+	description: 'A simple S3 that runs anywhere: shell, container, browser, Aspire, or in process',
+	topics: ['s3', 'object-storage', 'testing', 'wasm', 'aspire'],
+});
+
 export const scm = new PublicRepo('scm', {
 	description: 'unmango source control infrastructure',
 	topics: ['pulumi', 'iac', 'github'],
