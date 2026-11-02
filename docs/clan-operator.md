@@ -1,6 +1,6 @@
 # clan-operator
 
-Planned repo: `unmango/clan-operator`.
+Planned repo: `unmango/clan-operator`, moved from [gitlab.com/unmango/operators/clan](https://gitlab.com/unmango/operators/clan).
 
 ## Description
 

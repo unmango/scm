@@ -53,11 +53,11 @@ export const charts = new PublicRepo('charts', {
 });
 
 // Generic clan orchestration; cairn-operator delegates `clan machines update` to it.
-// autoInit gives it a main branch, so the first code lands through a pull request.
+// Moved from gitlab.com/unmango/operators/clan, so the repository already exists.
 export const clanOperator = new PublicRepo('clan-operator', {
 	description: 'Run clan commands from Kubernetes or a clan machine, with a dashboard',
 	topics: ['clan', 'nix', 'nixos', 'kubernetes', 'operator'],
-	autoInit: true,
+	repoOptions: { import: 'clan-operator' },
 });
 
 export const cloudflareOperator = new PublicRepo('cloudflare-operator', {
