@@ -91,6 +91,15 @@ export const go = new PublicRepo('go', {
 	githubChecks: ['Build and Test'],
 });
 
+// Functional programming types split out of unmango/go, served at go.unmango.dev/fp.
+// autoInit gives it a main branch, so the first code lands through a pull request.
+export const goFp = new PublicRepo('go-fp', {
+	description: 'Functional programming types for Go',
+	topics: ['go', 'functional-programming', 'generics'],
+	githubChecks: ['Build and Test'],
+	autoInit: true,
+});
+
 export const goMake = new PublicRepo('go-make', {
 	description: 'Makefile parsing library for Go',
 	githubChecks: ['Build and Test'],
