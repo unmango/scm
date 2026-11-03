@@ -22,7 +22,7 @@ See `docs/agents/domain.md`.
 ## Overview
 
 This repository manages source control infrastructure for "unmango" using Pulumi (TypeScript). It defines repositories, branch protection rulesets, and forge settings as code.
-One Pulumi program covers every forge; each forge has its own directory (`github/`) imported from the root `index.ts`.
+One Pulumi program covers every forge; each forge has its own directory (`github/`, `gitea/`) imported from the root `index.ts`.
 
 ## Commands
 
@@ -64,9 +64,11 @@ Repo (abstract base)
 
 **`github/index.ts`** — Organization-level resources (Actions secrets) and the `repos` stack output, derived from every export of `repos.ts`.
 
+**`gitea/repos.ts`** — Repositories on `gitea.thecluster.io`, through the bridged Terraform provider `@sapslaj/pulumi-gitea`. It has no label resource, so labels there are made through the API.
+
 ### Authentication
 
-Uses GitHub App credentials stored in Pulumi config (`Pulumi.prod.yaml`): app ID `1264044`, installation ID `66536645`.
+Uses GitHub App credentials stored in Pulumi config (`Pulumi.prod.yaml`): app ID `1264044`, installation ID `66536645`. Gitea uses `gitea:baseUrl` and the secret `gitea:token`.
 
 ### Stack
 

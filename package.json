@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"@pulumi/github": "^6.7.0",
-		"@pulumi/pulumi": "^3.162.0"
+		"@pulumi/pulumi": "^3.162.0",
+		"@sapslaj/pulumi-gitea": "^0.8.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.0",
