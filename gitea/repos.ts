@@ -1,7 +1,8 @@
 import * as gitea from '@sapslaj/pulumi-gitea';
 
-// Repositories on gitea.thecluster.io. The settings follow github/components/repo.ts:
-// squash merges only, and the branch goes once its pull request merges.
+// Repositories on gitea.thecluster.io. The settings follow github/components/repo.ts
+// with squash merges only. The provider has no option to delete a branch after its
+// pull request merges, so that stays as the Gitea default.
 const defaults: Partial<gitea.RepositoryArgs> = {
 	allowManualMerge: false,
 	allowMergeCommits: false,
