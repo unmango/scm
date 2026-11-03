@@ -1,2 +1,2 @@
-export * from './github';
 export * from './gitea';
+export * from './github';
