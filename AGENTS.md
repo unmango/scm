@@ -64,6 +64,8 @@ Repo (abstract base)
 
 **`github/index.ts`** — Organization-level resources (Actions secrets) and the `repos` stack output, derived from every export of `repos.ts`.
 
+**`gitea/org.ts`** — The `unmango` organization on Gitea, which owns its repositories.
+
 **`gitea/repos.ts`** — Repositories on `gitea.thecluster.io`, through the bridged Terraform provider `@sapslaj/pulumi-gitea`. It has no label resource, so labels there are made through the API.
 
 ### Authentication

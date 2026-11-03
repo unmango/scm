@@ -1,4 +1,5 @@
 import * as gitea from '@sapslaj/pulumi-gitea';
+import { unmango } from './org';
 
 // Repositories on gitea.thecluster.io. The settings follow github/components/repo.ts
 // with squash merges only. The provider has no option to delete a branch after its
@@ -21,7 +22,7 @@ const defaults: Partial<gitea.RepositoryArgs> = {
 // Private: it works on recordings of other people's live streams.
 export const mve = new gitea.Repository('mve', {
 	...defaults,
-	username: 'unmango',
+	username: unmango.name,
 	name: 'mve',
 	description: 'Mass video editing: tag long stream recordings and prune them for storage',
 	private: true,
