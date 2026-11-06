@@ -50,7 +50,7 @@ Repo (abstract base)
 
 **`github/components/repo.ts`** — Base class: sets defaults (squash-only merging, no auto-merge, delete branch on merge, MIT license).
 
-**`github/components/publicRepo.ts`** — Adds a `main` branch ruleset enforcing: required PRs, stale review dismissal, required status checks (mapped to GitHub integration ID `15368`), required signatures, linear history, no fast-forward.
+**`github/components/publicRepo.ts`** — Adds a `main` branch ruleset enforcing: required PRs, stale review dismissal, required review thread resolution, required status checks (mapped to GitHub integration ID `15368`), linear history, no fast-forward, no deletion. It does not require signed commits.
 
 **`github/components/privateRepo.ts`** — Minimal: just the base Repo with private visibility.
 
