@@ -30,6 +30,20 @@ _Avoid_: bot, our agents
 **Review bot**:
 An AI reviewer installed at the org level. Its comments are advisory and never count as human review.
 
+### Identities
+
+**Service account**:
+A forge user that isn't a person. It logs in only with a token, never through the maintainer's identity provider.
+_Avoid_: bot, machine user
+
+**Agent account**:
+A **Service account** a **Maintainer agent** acts as. It can push branches, open pull requests, and comment, but never merge.
+
+**Automation account**:
+A **Service account** that infrastructure acts as, such as Pulumi, mirror sync, or CI. It never makes a **Contribution**.
+
+### Policy
+
 **AI contribution policy**:
 The org-wide rules for **AI-assisted contributions** and **Agent contributions**, written so they don't depend on any one forge.
 
@@ -40,6 +54,8 @@ The org-wide rules for **AI-assisted contributions** and **Agent contributions**
 - An **Agent contribution** comes from a **Maintainer agent**; an outside human who used an agent submits an **AI-assisted contribution** instead
 - An **Agent contribution** is merged by a human, never by the agent
 - An undisclosed **AI-assisted contribution** or **Agent contribution** is closed with a link to the **AI contribution policy**
+- An **Agent contribution** made on a forge where the **Maintainer agent** has an **Agent account** is made as that account, not as the maintainer
+- An **Agent account** reaches the org's repositories, plus only the private repositories it is granted one by one
 - The **AI contribution policy** governs outside contributors and the agents the maintainer runs; forge AI features are settings derived from it, not part of it
 
 ## Flagged ambiguities
