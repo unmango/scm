@@ -41,8 +41,9 @@ new gh.ActionsOrganizationSecret('RELEASE_APP_PRIVATE_KEY', {
 	selectedRepositoryIds: releaseAppRepoIds,
 });
 
-// wishlists isn't declared in repos.ts yet, so its labels stand alone until it
-// is adopted. `wayfinder:map` was made by hand before the rest.
+// Made before wishlists was adopted in repos.ts, whose PublicRepo now manages the
+// same labels. retainOnDelete lets a follow-up drop these resources without
+// deleting the labels on GitHub. `wayfinder:map` was made by hand before the rest.
 const wishlistsLabelImports: Record<string, string> = {
 	'wayfinder:map': 'wishlists:wayfinder:map',
 };
@@ -54,7 +55,7 @@ for (const [name, { color, description }] of Object.entries(wishlistsLabels)) {
 		name,
 		color,
 		description,
-	}, id ? { import: id } : undefined);
+	}, { retainOnDelete: true, ...(id && { import: id }) });
 }
 
 export const repos = output(Object.values(allRepos).map(x => x.repo.name)).apply(names => [...names].sort());
