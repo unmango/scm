@@ -272,29 +272,6 @@ export const treespec = new PublicRepo('treespec', {
 export const wishlists = new PublicRepo('wishlists', {
 	description: 'A tool for sharing wishlists between a small group of people',
 	githubChecks: ['api', 'web', 'docker'],
-	// This repository and its main ruleset already exist. ignoreChanges keeps the
-	// imports from failing on settings that differ from the PublicRepo defaults,
-	// such as the hand-made ruleset's required signatures. A follow-up drops these
-	// options so the next up brings both in line.
-	repoOptions: {
-		import: 'wishlists',
-		ignoreChanges: ['hasProjects', 'licenseTemplate'],
-	},
-	rulesetOptions: {
-		import: 'wishlists:9560335',
-		ignoreChanges: ['rules'],
-	},
-	// Made by hand before the repository was managed here.
-	labelImports: {
-		'ai-assisted': 'wishlists:ai-assisted',
-		'needs-triage': 'wishlists:needs-triage',
-		'needs-info': 'wishlists:needs-info',
-		'ready-for-agent': 'wishlists:ready-for-agent',
-		'ready-for-human': 'wishlists:ready-for-human',
-		'wayfinder:map': 'wishlists:wayfinder:map',
-		'wayfinder:research': 'wishlists:wayfinder:research',
-		'wayfinder:prototype': 'wishlists:wayfinder:prototype',
-		'wayfinder:grilling': 'wishlists:wayfinder:grilling',
-		'wayfinder:task': 'wishlists:wayfinder:task',
-	},
+	// Licensed GPL-3.0, not the MIT template PublicRepo applies at creation.
+	repoOptions: { ignoreChanges: ['licenseTemplate'] },
 });
