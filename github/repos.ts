@@ -126,6 +126,14 @@ export const goGmk = new PublicRepo('gnumake-go', {
 	topics: ['go', 'make', 'gnumake', 'cgo', 'plugin'],
 });
 
+// Tracks AI usage in a codebase and encourages gradual replacement with human-written code.
+// autoInit gives it a main branch, so the first code lands through a pull request.
+export const humanity = new PublicRepo('humanity', {
+	description: 'Track AI usage in a codebase and gradually replace it with human-written code',
+	topics: ['ai', 'code-provenance', 'developer-tools'],
+	autoInit: true,
+});
+
 export const kubepkgs = new PublicRepo('kubepkgs', {
 	description: 'Nix packaged Kubernetes components and utilities',
 	githubChecks: ['build'],
