@@ -176,8 +176,6 @@ export const palworldOperator = new PublicRepo('palworld-operator', {
 	description: 'Manage Palworld servers in Kubernetes',
 	topics: ['kubernetes', 'operator', 'palworld', 'kubebuilder', 'go'],
 	githubChecks: ['build', 'lint', 'test'],
-	pages: legacyGhPages,
-	pagesOptions: { import: 'palworld-operator' },
 });
 
 export const protofs = new PublicRepo('protofs', {
