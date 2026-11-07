@@ -50,6 +50,7 @@ export const charts = new PublicRepo('charts', {
 	description: 'Smörgåsbord of Helm charts',
 	githubChecks: ['lint'],
 	pages: legacyGhPages,
+	pagesOptions: { import: 'charts' },
 });
 
 // Generic clan orchestration; cairn-operator delegates `clan machines update` to it.
@@ -64,6 +65,7 @@ export const cloudflareOperator = new PublicRepo('cloudflare-operator', {
 	description: 'Manage Cloudflare infrastructure in Kubernetes',
 	githubChecks: ['build', 'lint', 'test'],
 	pages: legacyGhPages,
+	pagesOptions: { import: 'cloudflare-operator' },
 });
 
 export const containers = new PublicRepo('containers', {
@@ -92,6 +94,7 @@ export const game = new PublicRepo('game', {
 	githubChecks: ['Build and Test'],
 	// The architecture site, deployed by the repository's pages workflow.
 	pages: { buildType: 'workflow' },
+	pagesOptions: { import: 'game' },
 });
 
 export const go = new PublicRepo('go', {
@@ -174,6 +177,7 @@ export const palworldOperator = new PublicRepo('palworld-operator', {
 	topics: ['kubernetes', 'operator', 'palworld', 'kubebuilder', 'go'],
 	githubChecks: ['build', 'lint', 'test'],
 	pages: legacyGhPages,
+	pagesOptions: { import: 'palworld-operator' },
 });
 
 export const protofs = new PublicRepo('protofs', {
