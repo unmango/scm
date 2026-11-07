@@ -50,7 +50,7 @@ Repo (abstract base)
 
 **`github/components/repo.ts`** — Base class: sets defaults (squash-only merging, no auto-merge, delete branch on merge, MIT license).
 
-**`github/components/publicRepo.ts`** — Adds a `main` branch ruleset enforcing: required PRs, stale review dismissal, required status checks (mapped to GitHub integration ID `15368`), required signatures, linear history, no fast-forward.
+**`github/components/publicRepo.ts`** — Adds a `main` branch ruleset enforcing: required PRs, stale review dismissal, required status checks (mapped to GitHub integration ID `15368`), required signatures, linear history, no fast-forward. A repository's `pages` become a `RepositoryPages` child resource, not the repository's deprecated `pages` input; `pagesOptions` adopts an existing site.
 
 **`github/components/privateRepo.ts`** — Minimal: just the base Repo with private visibility.
 
@@ -62,7 +62,7 @@ Repo (abstract base)
 
 **`github/labels.ts`** — Labels every repo gets by default: AI disclosure (`ai-assisted`), triage, and wayfinder.
 
-**`github/index.ts`** — Organization-level resources (Actions secrets) and the `repos` stack output, derived from every export of `repos.ts`.
+**`github/index.ts`** — Organization-level resources (Actions secrets, each with an `ActionsOrganizationSecretRepositories` listing the repositories that can read it) and the `repos` stack output, derived from every export of `repos.ts`.
 
 **`gitea/org.ts`** — The `unmango` organization on Gitea, which owns its repositories.
 

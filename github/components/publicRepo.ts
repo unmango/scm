@@ -33,7 +33,10 @@ export interface PublicRepoArgs {
 	template?: RepositoryTemplate;
 	/** Whether GitHub makes an initial commit, so the default branch exists for files committed by this program. */
 	autoInit?: Input<boolean>;
+	/** The repository's GitHub Pages site, managed as its own resource. */
 	pages?: RepositoryPages;
+	/** Passed through to the Pages resource, for adopting a site that already exists. */
+	pagesOptions?: CustomResourceOptions;
 	topics?: Input<Input<string>[]>;
 	/** Passed through to the repository resource, for adopting one that already exists. */
 	repoOptions?: CustomResourceOptions;
@@ -57,6 +60,7 @@ export interface PublicRepoArgs {
 
 export class PublicRepo extends Repo {
 	public readonly mainRuleset!: gh.RepositoryRuleset;
+	public readonly pages?: gh.RepositoryPages;
 
 	constructor(
 		name: string,
@@ -74,7 +78,6 @@ export class PublicRepo extends Repo {
 					allowAutoMerge: true,
 					template: args.template,
 					autoInit: args.autoInit,
-					pages: args.pages,
 					topics: args.topics,
 				},
 				repoOptions: args.repoOptions,
@@ -125,11 +128,27 @@ export class PublicRepo extends Repo {
 			{ parent: this, ...args.rulesetOptions },
 		);
 
+		const pages = args.pages && new gh.RepositoryPages(name, {
+			repository: repo.name,
+			buildType: args.pages.buildType,
+			cname: args.pages.cname,
+			source: args.pages.source,
+		}, {
+			parent: this,
+			// Renaming the repository replaces this resource. Created first, enabling
+			// Pages would fail on a site that exists, and the old one's delete would
+			// disable it again through GitHub's rename redirect.
+			deleteBeforeReplace: true,
+			...args.pagesOptions,
+		});
+
 		this.mainRuleset = mainRuleset;
+		this.pages = pages;
 
 		this.registerOutputs({
 			repo,
 			mainRuleset,
+			pages,
 			vulnerabilityAlerts,
 			labels,
 		});
