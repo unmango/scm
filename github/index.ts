@@ -1,9 +1,8 @@
 import * as gh from '@pulumi/github';
 import { Config, output } from '@pulumi/pulumi';
-import { disclosureLabels, triageLabels, wayfinderLabels } from './labels';
 import './community';
 import * as allRepos from './repos';
-import { terraformProviderAtproto, terraformProviderNetgear } from './repos';
+import { terraformProviderAtproto, terraformProviderNetgear, wishlists } from './repos';
 
 // The Terraform Registry checks provider releases against every key registered on
 // the namespace, so one key signs them all. The registry accepts RSA and DSA keys only.
@@ -24,10 +23,8 @@ for (const [secretName, plaintextValue] of Object.entries(releaseSigningSecrets)
 
 // release-please tags releases with the release app's token, because a tag pushed
 // with GITHUB_TOKEN does not start the workflow that publishes the release: goreleaser
-// for the providers, the chart and image for wishlists. wishlists isn't declared in
-// repos.ts yet, so its ID is looked up.
-const wishlists = gh.getRepositoryOutput({ fullName: 'unmango/wishlists' });
-const releaseAppRepoIds = [...providerRepos.map(x => x.repo.repoId), wishlists.repoId];
+// for the providers, the chart and image for wishlists.
+const releaseAppRepoIds = [...providerRepos, wishlists].map(x => x.repo.repoId);
 new gh.ActionsOrganizationVariable('RELEASE_APP_CLIENT_ID', {
 	variableName: 'RELEASE_APP_CLIENT_ID',
 	value: config.require('releaseAppClientId'),
@@ -40,22 +37,5 @@ new gh.ActionsOrganizationSecret('RELEASE_APP_PRIVATE_KEY', {
 	visibility: 'selected',
 	selectedRepositoryIds: releaseAppRepoIds,
 });
-
-// Made before wishlists was adopted in repos.ts, whose PublicRepo now manages the
-// same labels. retainOnDelete lets a follow-up drop these resources without
-// deleting the labels on GitHub. `wayfinder:map` was made by hand before the rest.
-const wishlistsLabelImports: Record<string, string> = {
-	'wayfinder:map': 'wishlists:wayfinder:map',
-};
-const wishlistsLabels = { ...disclosureLabels, ...triageLabels, ...wayfinderLabels };
-for (const [name, { color, description }] of Object.entries(wishlistsLabels)) {
-	const id = wishlistsLabelImports[name];
-	new gh.IssueLabel(`wishlists-${name}`, {
-		repository: 'wishlists',
-		name,
-		color,
-		description,
-	}, { retainOnDelete: true, ...(id && { import: id }) });
-}
 
 export const repos = output(Object.values(allRepos).map(x => x.repo.name)).apply(names => [...names].sort());
