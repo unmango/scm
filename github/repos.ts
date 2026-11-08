@@ -93,8 +93,8 @@ export const game = new PublicRepo('game', {
 	description: 'A gaming framework',
 	githubChecks: ['Build and Test'],
 	// The architecture site, deployed by the repository's pages workflow.
+	// #351's deploy disabled the site, so it is created rather than imported.
 	pages: { buildType: 'workflow' },
-	pagesOptions: { import: 'game' },
 });
 
 export const go = new PublicRepo('go', {
