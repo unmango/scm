@@ -12,7 +12,8 @@
 	},
 	"excludes": [
 		"**/node_modules",
-		"**/*-lock.json"
+		"**/*-lock.json",
+		"graphify-out/**"
 	],
 	"plugins": [
 		"https://plugins.dprint.dev/typescript-0.91.1.wasm",

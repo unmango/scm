@@ -6,6 +6,14 @@
     systems.url = "github:UnstoppableMango/nix-systems";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
+    mangopkgs = {
+      url = "github:unmango/pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.systems.follows = "systems";
+      inputs.treefmt-nix.follows = "treefmt-nix";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,18 +30,20 @@
       ];
 
       perSystem =
-        { pkgs, ... }:
+        { inputs', pkgs, ... }:
         {
           devShells.default = pkgs.mkShellNoCC {
-            packages = with pkgs; [
-              dprint
-              gnumake
-              nixfmt
-              nodejs_24
-              shellcheck
-              pulumi-bin
-              yarn
-            ];
+            packages =
+              (with pkgs; [
+                dprint
+                gnumake
+                nixfmt
+                nodejs_24
+                shellcheck
+                pulumi-bin
+                yarn
+              ])
+              ++ [ inputs'.mangopkgs.packages.graphify ];
 
             DPRINT = pkgs.dprint + "/bin/dprint";
             NIXFMT = pkgs.nixfmt + "/bin/nixfmt";
