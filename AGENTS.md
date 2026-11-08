@@ -35,7 +35,7 @@ See `docs/agents/domain.md`.
 ## Overview
 
 This repository manages source control infrastructure for "unmango" using Pulumi (TypeScript). It defines repositories, branch protection rulesets, and forge settings as code.
-One Pulumi program covers every forge; each forge has its own directory (`github/`, `gitea/`) imported from the root `index.ts`.
+It covers only GitHub. Gitea's `unmango` org and repositories belong to the Forge program at `gitea.thecluster.io/scm/self` (ADR 0002 in UnstoppableMango/vcs).
 
 ## Commands
 
@@ -67,7 +67,7 @@ Repo (abstract base)
 
 **`github/components/privateRepo.ts`** — Minimal: just the base Repo with private visibility.
 
-**`index.ts`** — Entrypoint; re-exports each forge's program, such as `./github`.
+**`index.ts`** — Entrypoint; re-exports `./github`.
 
 **`github/repos.ts`** — Instantiates all managed repos as `PublicRepo` or `PrivateRepo` with their specific status check names, one exported const each.
 
@@ -77,17 +77,9 @@ Repo (abstract base)
 
 **`github/index.ts`** — Organization-level resources (Actions secrets, each with an `ActionsOrganizationSecretRepositories` listing the repositories that can read it) and the `repos` stack output, derived from every export of `repos.ts`.
 
-**`gitea/org.ts`** — The `unmango` organization on Gitea, which owns its repositories.
-
-**`gitea/repos.ts`** — Repositories on `gitea.thecluster.io`, through the bridged Terraform provider `@sapslaj/pulumi-gitea`. It has no label resource, so labels there are made through the API.
-
-**`gitea/seed.ts`** — The `scm` org, UnstoppableMango's place in its Owners team, and the empty `scm/seed` repository for the Seed (ADR 0002 in UnstoppableMango/vcs). They move to the Seed's state once it runs.
-
-**`gitea/collaborators.ts`** — Collaborators on Gitea repositories. It is kept apart from `repos.ts` because `gitea/index.ts` treats every export of `repos.ts` as a repository.
-
 ### Authentication
 
-Uses GitHub App credentials stored in Pulumi config (`Pulumi.prod.yaml`): app ID `1264044`, installation ID `66536645`. Gitea uses `gitea:baseUrl` and the secret `gitea:token`.
+Uses GitHub App credentials stored in Pulumi config (`Pulumi.prod.yaml`): app ID `1264044`, installation ID `66536645`.
 
 ### Stack
 
