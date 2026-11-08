@@ -54,7 +54,13 @@ export abstract class Repo extends ComponentResource {
 			squashMergeCommitMessage: 'COMMIT_MESSAGES',
 			squashMergeCommitTitle: 'COMMIT_OR_PR_TITLE',
 			...args.overrides,
-		}, { parent: this, ...args.repoOptions });
+		}, {
+			parent: this,
+			...args.repoOptions,
+			// Pages are a RepositoryPages resource now. Left unset, the deprecated
+			// `pages` input reads as removed, and the provider disables the site.
+			ignoreChanges: ['pages', ...(args.repoOptions?.ignoreChanges ?? [])],
+		});
 
 		const vulnerabilityAlerts = new gh.RepositoryVulnerabilityAlerts(name, {
 			repository: repo.name,
