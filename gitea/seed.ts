@@ -31,3 +31,17 @@ export const seed = new gitea.Repository('seed', {
 	hasWiki: false,
 	archiveOnDestroy: true,
 });
+
+// Gitea makes an Owners team in every new org, holding only the org's creator,
+// which is this program's token user. Erik joins it through his GitHub-linked
+// account so he can work in the org.
+const scmOwners = gitea.getTeamsOutput({ organisation: scm.name }).apply(({ teams }) => {
+	const owners = teams.find(t => t.name === 'Owners');
+	if (owners?.id === undefined) throw new Error('the scm org has no Owners team');
+	return owners.id;
+});
+
+export const scmOwnersUnstoppableMango = new gitea.TeamMembership('scm-owners-UnstoppableMango', {
+	teamId: scmOwners,
+	username: 'UnstoppableMango',
+});
