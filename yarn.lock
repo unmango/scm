@@ -403,7 +403,7 @@
   dependencies:
     "@pulumi/pulumi" "^3.142.0"
 
-"@pulumi/pulumi@^3.142.0", "@pulumi/pulumi@^3.162.0", "@pulumi/pulumi@^3.238.0":
+"@pulumi/pulumi@^3.142.0", "@pulumi/pulumi@^3.162.0":
   version "3.274.1"
   resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.274.1.tgz#6db4a64edae0df534b687410b3b7fd7b3abc7f5e"
   integrity sha512-L9WHM4W7y9BmGwTZ0n5yUEVo7zhb6BXocNFPv3VtwEH3DZUzJ6N+VTiLvo1HbSMnZJJVS0jFL4zMmOm80Lbzeg==
@@ -433,15 +433,6 @@
     source-map-support "^0.5.6"
     upath "^1.1.0"
 
-"@sapslaj/pulumi-gitea@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@sapslaj/pulumi-gitea/-/pulumi-gitea-0.8.1.tgz#a457f7b13583d902b211fce004845d34efac6229"
-  integrity sha512-qp5a7zqKykpalO47ytqxcrk3Qb52Hrdy9sptFrZOg+xXg+OinJ/SLrJu6fLfTVwRL9MOkbfzZvYOOz+Ufa07hg==
-  dependencies:
-    "@pulumi/pulumi" "^3.238.0"
-    "@types/node" "^20"
-    typescript "^4.7.0"
-
 "@types/esrecurse@^4.3.1":
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/@types/esrecurse/-/esrecurse-4.3.1.tgz#6f636af962fbe6191b830bd676ba5986926bccec"
@@ -468,13 +459,6 @@
   integrity sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==
   dependencies:
     undici-types "~8.9.0"
-
-"@types/node@^20":
-  version "20.19.43"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.19.43.tgz#fcecf580ba42a0db55cf404c372c97973c376c97"
-  integrity sha512-6oYBAi5ikg4Pl+kGsoYtawUMBT2zZMCvPNF7pVLnHZfd1zf38DRiWn/gT01RYCdUqkv7Fhr+C9ot4/tb+2sVvA==
-  dependencies:
-    undici-types "~6.21.0"
 
 "@types/semver@^7.5.6":
   version "7.8.0"
@@ -1288,20 +1272,10 @@ typescript-eslint@^8.54.0:
     "@typescript-eslint/typescript-estree" "8.72.2"
     "@typescript-eslint/utils" "8.72.2"
 
-typescript@^4.7.0:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
-
 typescript@^6.0.0:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.3.tgz#90251dc007916e972786cb94d74d15b185577d21"
   integrity sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==
-
-undici-types@~6.21.0:
-  version "6.21.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
-  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 undici-types@~8.9.0:
   version "8.9.0"
