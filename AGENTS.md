@@ -81,8 +81,6 @@ Repo (abstract base)
 
 **`gitea/repos.ts`** — Repositories on `gitea.thecluster.io`, through the bridged Terraform provider `@sapslaj/pulumi-gitea`. It has no label resource, so labels there are made through the API.
 
-**`gitea/agents.ts`** — The `agents` team: write on every `unmango` repository, for agent accounts such as `claude`. The Seed (`scm/seed`) creates the accounts. It moves to the Forge program unchanged.
-
 **`gitea/collaborators.ts`** — Collaborators on Gitea repositories. It is kept apart from `repos.ts` because `gitea/index.ts` treats every export of `repos.ts` as a repository.
 
 ### Authentication
