@@ -684,9 +684,9 @@ emoji-regex@^8.0.0:
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
 es-module-lexer@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-3.0.4.tgz#157174100418c206cd1c5d142e5a3be849b845b9"
-  integrity sha512-BldNY5mwkVu+cQ5Ymn3e6hB9Sx8XHx4ZevWbiUyZbfKxJxYO27Hf0wfzkxIaD5CAJMaGl3YspKELj0ff/7nCMA==
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/es-module-lexer/-/es-module-lexer-3.0.5.tgz#57c9b204a2055f8d6ea831a55dbfeff8fd1fa7c9"
+  integrity sha512-RNq2lKJw53c7z9QRHeiKeA6Ez0oikOqiBGdmxQhKDxEiOX1g5QJR4IoFVwicn8uCZcRWNrXC3NZaJihgK7aEbg==
 
 escalade@^3.1.1:
   version "3.2.0"
