@@ -53,6 +53,14 @@ export const charts = new PublicRepo('charts', {
 	pagesOptions: { import: 'charts' },
 });
 
+// Reusable CI workflows for every Nix repository. Composite actions stay in actions.
+// autoInit gives it a main branch, so the first code lands through a pull request.
+export const ci = new PublicRepo('ci', {
+	description: 'Reusable GitHub Actions workflows for Nix repositories',
+	topics: ['nix', 'ci', 'github-actions'],
+	autoInit: true,
+});
+
 // Generic clan orchestration; cairn-operator delegates `clan machines update` to it.
 // autoInit gives it a main branch, so the first code lands through a pull request.
 export const clanOperator = new PublicRepo('clan-operator', {
