@@ -2,7 +2,7 @@ import * as gh from '@pulumi/github';
 import { Config, Input, output } from '@pulumi/pulumi';
 import './community';
 import * as allRepos from './repos';
-import { terraformProviderAtproto, terraformProviderNetgear, wishlists } from './repos';
+import { ci, terraformProviderAtproto, terraformProviderNetgear, wishlists } from './repos';
 
 // The Terraform Registry checks provider releases against every key registered on
 // the namespace, so one key signs them all. The registry accepts RSA and DSA keys only.
@@ -18,8 +18,9 @@ for (const [name, value] of Object.entries(releaseSigningSecrets)) {
 
 // release-please tags releases with the release app's token, because a tag pushed
 // with GITHUB_TOKEN does not start the workflow that publishes the release: goreleaser
-// for the providers, the chart and image for wishlists.
-const releaseAppRepoIds = [...providerRepos, wishlists].map(x => x.repo.repoId);
+// for the providers, the chart and image for wishlists. ci's health workflow mints
+// its read and issue tokens from the same app.
+const releaseAppRepoIds = [...providerRepos, wishlists, ci].map(x => x.repo.repoId);
 new gh.ActionsOrganizationVariable('RELEASE_APP_CLIENT_ID', {
 	variableName: 'RELEASE_APP_CLIENT_ID',
 	value: config.require('releaseAppClientId'),
