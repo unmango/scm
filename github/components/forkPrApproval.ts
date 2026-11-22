@@ -67,6 +67,7 @@ async function failure(response: Response, action: string): Promise<Error> {
 	return new Error(`${action}: ${String(response.status)} ${await response.text()}`);
 }
 
+// Until the provider has a resource for this: https://togithub.com/integrations/terraform-provider-github/issues/3445
 class Provider implements dynamic.ResourceProvider<State, State> {
 	private auth?: Auth;
 
