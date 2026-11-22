@@ -67,7 +67,8 @@ async function failure(response: Response, action: string): Promise<Error> {
 	return new Error(`${action}: ${String(response.status)} ${await response.text()}`);
 }
 
-// Until the provider has a resource for this: https://togithub.com/integrations/terraform-provider-github/issues/3445
+// TODO: use the github provider's resource once it has one.
+// https://togithub.com/integrations/terraform-provider-github/issues/3445
 class Provider implements dynamic.ResourceProvider<State, State> {
 	private auth?: Auth;
 
@@ -108,8 +109,7 @@ class Provider implements dynamic.ResourceProvider<State, State> {
 		return { outs: news };
 	}
 
-	// GitHub has no unset policy, and the repository may be gone, so deleting
-	// only stops managing the setting.
+	// GitHub has no unset policy, and the repository may already be gone.
 	delete() {
 		return Promise.resolve();
 	}
