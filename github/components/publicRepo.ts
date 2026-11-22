@@ -31,10 +31,7 @@ export interface PublicRepoArgs {
 	 */
 	githubChecks?: Input<Input<string>[]>;
 	requiredChecks?: RepositoryRulesetRulesRequiredStatusChecks['requiredChecks'];
-	/**
-	 * Requires only the `required` gate, ignoring githubChecks and requiredChecks,
-	 * so a repository's list can stay in place until it moves to the gate.
-	 */
+	/** Requires only the `required` check, whatever githubChecks and requiredChecks say. */
 	requiredGate?: boolean;
 	template?: RepositoryTemplate;
 	/** Whether GitHub makes an initial commit, so the default branch exists for files committed by this program. */

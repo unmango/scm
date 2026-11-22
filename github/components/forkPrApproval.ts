@@ -44,18 +44,19 @@ function appJwt(app: AppAuth): string {
 	return `${body}.${signature}`;
 }
 
-async function call(auth: Auth, method: string, repository: string, body?: object): Promise<Response> {
-	const { app, owner } = auth;
-	const tokenResponse = await fetch(`${api}/app/installations/${String(app.installationId)}/access_tokens`, {
+async function installationToken(app: AppAuth): Promise<string> {
+	const response = await fetch(`${api}/app/installations/${String(app.installationId)}/access_tokens`, {
 		method: 'POST',
 		headers: { ...headers, authorization: `Bearer ${appJwt(app)}` },
 	});
-	if (!tokenResponse.ok) {
-		throw new Error(`creating an installation token: ${String(tokenResponse.status)} ${await tokenResponse.text()}`);
-	}
-	const { token } = await tokenResponse.json() as { token: string };
+	if (!response.ok) throw await failure(response, 'creating an installation token');
+	const { token } = await response.json() as { token: string };
+	return token;
+}
 
-	return fetch(`${api}/repos/${owner}/${repository}/actions/permissions/fork-pr-contributor-approval`, {
+async function approvalRequest(auth: Auth, method: string, repository: string, body?: object): Promise<Response> {
+	const token = await installationToken(auth.app);
+	return fetch(`${api}/repos/${auth.owner}/${repository}/actions/permissions/fork-pr-contributor-approval`, {
 		method,
 		headers: { ...headers, authorization: `Bearer ${token}` },
 		body: body && JSON.stringify(body),
@@ -66,14 +67,15 @@ async function failure(response: Response, action: string): Promise<Error> {
 	return new Error(`${action}: ${String(response.status)} ${await response.text()}`);
 }
 
-// Authenticates as the same app as the github provider, read from the stack's config.
 class Provider implements dynamic.ResourceProvider<State, State> {
 	private auth?: Auth;
 
 	configure(req: dynamic.ConfigureRequest) {
+		const app = JSON.parse(req.config.require('github:appAuth')) as AppAuth;
 		this.auth = {
 			owner: req.config.require('github:owner'),
-			app: JSON.parse(req.config.require('github:appAuth')) as AppAuth,
+			// The github provider accepts a PEM with escaped newlines too.
+			app: { ...app, pemFile: app.pemFile.replace(/\\n/g, '\n') },
 		};
 		return Promise.resolve();
 	}
@@ -93,7 +95,7 @@ class Provider implements dynamic.ResourceProvider<State, State> {
 
 	async read(id: string, props?: State) {
 		const repository = props?.repository ?? id;
-		const response = await call(this.settings(), 'GET', repository);
+		const response = await approvalRequest(this.requireAuth(), 'GET', repository);
 		if (response.status === 404) return {};
 		if (!response.ok) throw await failure(response, `reading ${repository}'s fork PR approval`);
 		const { approval_policy } = await response.json() as { approval_policy: ApprovalPolicy };
@@ -111,13 +113,14 @@ class Provider implements dynamic.ResourceProvider<State, State> {
 		return Promise.resolve();
 	}
 
-	private settings(): Auth {
+	private requireAuth(): Auth {
 		if (!this.auth) throw new Error('the ForkPrApproval provider was not configured');
 		return this.auth;
 	}
 
 	private async put(state: State) {
-		const response = await call(this.settings(), 'PUT', state.repository, { approval_policy: state.approvalPolicy });
+		const body = { approval_policy: state.approvalPolicy };
+		const response = await approvalRequest(this.requireAuth(), 'PUT', state.repository, body);
 		if (!response.ok) throw await failure(response, `setting ${state.repository}'s fork PR approval`);
 	}
 }
