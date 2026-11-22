@@ -64,6 +64,10 @@ Repo (abstract base)
 **`github/components/repo.ts`** — Base class: sets defaults (squash-only merging, no auto-merge, delete branch on merge, MIT license).
 
 **`github/components/publicRepo.ts`** — Adds a ruleset named `main`, targeting the default branch, enforcing: required PRs, stale review dismissal, required review thread resolution, required status checks (mapped to GitHub integration ID `15368`), linear history, no force pushes, no deletion. It does not require signed commits. A repository's `pages` become a `RepositoryPages` child resource, not the repository's deprecated `pages` input; `pagesOptions` adopts an existing site.
+Repository admins bypass it in `pull_request` mode; `rulesetBypassActors` adds to them.
+`requiredGate` requires only the `required` check, whatever `githubChecks` lists.
+Every public repo requires approval before running workflows from any outside collaborator's fork, through the dynamic resource in `github/components/forkPrApproval.ts`, since the provider has none.
+It authenticates as the same app as the github provider, from the stack's config.
 
 **`github/components/privateRepo.ts`** — Minimal: just the base Repo with private visibility.
 

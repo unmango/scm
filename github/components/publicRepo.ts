@@ -7,6 +7,7 @@ import {
 	RepositoryTemplate,
 } from '@pulumi/github/types/input';
 import { ComponentResourceOptions, CustomResourceOptions, Input, output } from '@pulumi/pulumi';
+import { ForkPrApproval } from './forkPrApproval';
 import { IssueLabel, Repo } from './repo';
 
 const integrationIds = {
@@ -30,6 +31,8 @@ export interface PublicRepoArgs {
 	 */
 	githubChecks?: Input<Input<string>[]>;
 	requiredChecks?: RepositoryRulesetRulesRequiredStatusChecks['requiredChecks'];
+	/** Requires only the `required` check, whatever githubChecks and requiredChecks say. */
+	requiredGate?: boolean;
 	template?: RepositoryTemplate;
 	/** Whether GitHub makes an initial commit, so the default branch exists for files committed by this program. */
 	autoInit?: Input<boolean>;
@@ -40,7 +43,10 @@ export interface PublicRepoArgs {
 	topics?: Input<Input<string>[]>;
 	/** Passed through to the repository resource, for adopting one that already exists. */
 	repoOptions?: CustomResourceOptions;
-	/** Actors that may bypass the `main` ruleset, such as an app that commits files to it directly. */
+	/**
+	 * Actors that may bypass the `main` ruleset, such as an app that commits files
+	 * to it directly, on top of repository admins merging a pull request.
+	 */
 	rulesetBypassActors?: Input<Input<RepositoryRulesetBypassActor>[]>;
 	/** Passed through to the `main` ruleset resource, for adopting one that already exists. */
 	rulesetOptions?: CustomResourceOptions;
@@ -60,6 +66,7 @@ export interface PublicRepoArgs {
 
 export class PublicRepo extends Repo {
 	public readonly mainRuleset!: gh.RepositoryRuleset;
+	public readonly forkPrApproval!: ForkPrApproval;
 	public readonly pages?: gh.RepositoryPages;
 
 	constructor(
@@ -96,9 +103,7 @@ export class PublicRepo extends Repo {
 		const repo = this.repo;
 		const vulnerabilityAlerts = this.vulnerabilityAlerts;
 		const labels = this.labels;
-		const statusChecks = args.requiredChecks
-			? getRequiredStatusChecks(args.requiredChecks)
-			: getGitHubStatusChecks(args.githubChecks ?? defaultGitHubChecks);
+		const statusChecks = getStatusChecks(args);
 
 		const mainRuleset = new gh.RepositoryRuleset(
 			name,
@@ -107,7 +112,7 @@ export class PublicRepo extends Repo {
 				repository: repo.name,
 				enforcement: 'active',
 				target: 'branch',
-				bypassActors: args.rulesetBypassActors,
+				bypassActors: output(args.rulesetBypassActors ?? []).apply(x => [adminBypass, ...x]),
 				conditions: {
 					refName: {
 						includes: ['~DEFAULT_BRANCH'],
@@ -128,6 +133,11 @@ export class PublicRepo extends Repo {
 			{ parent: this, ...args.rulesetOptions },
 		);
 
+		const forkPrApproval = new ForkPrApproval(name, {
+			repository: repo.name,
+			approvalPolicy: 'all_external_contributors',
+		}, { parent: this });
+
 		const pages = args.pages && new gh.RepositoryPages(name, {
 			repository: repo.name,
 			buildType: args.pages.buildType,
@@ -143,11 +153,13 @@ export class PublicRepo extends Repo {
 		});
 
 		this.mainRuleset = mainRuleset;
+		this.forkPrApproval = forkPrApproval;
 		this.pages = pages;
 
 		this.registerOutputs({
 			repo,
 			mainRuleset,
+			forkPrApproval,
 			pages,
 			vulnerabilityAlerts,
 			labels,
@@ -155,8 +167,21 @@ export class PublicRepo extends Repo {
 	}
 }
 
+// The way through an outage of a required check.
+const adminBypass: RepositoryRulesetBypassActor = {
+	actorType: 'RepositoryRole',
+	actorId: 5, // Admin
+	bypassMode: 'pull_request',
+};
+
 // The check every repository's CI ends in unless it says otherwise.
 const defaultGitHubChecks = ['required'];
+
+function getStatusChecks(args: PublicRepoArgs): RepositoryRulesetRules['requiredStatusChecks'] {
+	if (args.requiredGate) return getGitHubStatusChecks(defaultGitHubChecks);
+	if (args.requiredChecks) return getRequiredStatusChecks(args.requiredChecks);
+	return getGitHubStatusChecks(args.githubChecks ?? defaultGitHubChecks);
+}
 
 function getGitHubStatusChecks(
 	checks: PublicRepoArgs['githubChecks'],
