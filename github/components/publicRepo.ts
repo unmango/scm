@@ -43,10 +43,7 @@ export interface PublicRepoArgs {
 	topics?: Input<Input<string>[]>;
 	/** Passed through to the repository resource, for adopting one that already exists. */
 	repoOptions?: CustomResourceOptions;
-	/**
-	 * Actors that may bypass the `main` ruleset, such as an app that commits files
-	 * to it directly, on top of repository admins merging a pull request.
-	 */
+	/** Actors besides repository admins that may bypass the `main` ruleset. */
 	rulesetBypassActors?: Input<Input<RepositoryRulesetBypassActor>[]>;
 	/** Passed through to the `main` ruleset resource, for adopting one that already exists. */
 	rulesetOptions?: CustomResourceOptions;
