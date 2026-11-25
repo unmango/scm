@@ -459,9 +459,9 @@
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
 "@types/node@>=13.7.0", "@types/node@^26.0.0":
-  version "26.6.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.8.tgz#4ca4c08e1889be401da11ce3d92ebd9ded9b55f9"
-  integrity sha512-Xo5PW7XYoTRn8nhGBo73qpqBMFvkCIX0g0m6jtWpPo7C7oeEaMdjBJtNBNZDISRpx9/LvvIqvf9tUB3I+mDTSQ==
+  version "26.6.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.9.tgz#8544e8255bb9cbac39c0408e7a3b1d4eaa2948a0"
+  integrity sha512-MkLVXFazHKL5/3lkiYqaSti6Ohv0Vi6z2bPwUQAs/aXUuuY8go4hR3mz8Kvu0lBC2HH0Zn+ON2G9hTglqDD48A==
   dependencies:
     undici-types "~8.9.0"
 
