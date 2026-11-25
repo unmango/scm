@@ -913,9 +913,9 @@ ignore@^7.0.5:
   integrity sha512-52N+Y4HRMOJmbLmr+DqO4iSRyyB7N52gm7PWCT6h0p978+oKbqHCB7gIJIwZvBUsjlSdWbrBFqUSmIFNZMpn0A==
 
 import-in-the-middle@^3.0.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-3.6.0.tgz#d91091979dd022ab5eed619ab5ab82e7f7b348f9"
-  integrity sha512-xRU7hI24S2FhucXtuZXn8EpcOjfVP6iiEQyR0USayPeaOroEmSsNlqnl95866iRdRtkHrd6Q/Z4D14R60au0+A==
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/import-in-the-middle/-/import-in-the-middle-3.7.0.tgz#315474952815b2355ff1f719b48f18d8326dde5a"
+  integrity sha512-E+eunmEgK2Bd9nHQCR0IsG52TEaVzSZqRH4RLcEmcUazGAnjoyXDYsoGnf4OnggekXiG7Zz11XFh3gH+Br04Yw==
   dependencies:
     cjs-module-lexer "^2.2.0"
     es-module-lexer "^3.0.4"
