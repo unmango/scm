@@ -197,6 +197,15 @@ export const pulumiBaremetal = new PublicRepo('pulumi-baremetal', {
 	githubChecks: ['Provisioner', 'Provider', 'Tests'],
 });
 
+// Native replacement for the bridged pulumiverse/pulumi-talos provider.
+// Its CI will follow pulumiverse's conventions; require those checks once it lands.
+export const pulumiTalosNative = new PublicRepo('pulumi-talos-native', {
+	description: 'Native Pulumi provider for Talos Linux',
+	topics: ['pulumi', 'pulumi-provider', 'talos', 'kubernetes'],
+	template: { owner: 'pulumi', repository: 'pulumi-provider-boilerplate' },
+	githubChecks: [],
+});
+
 export const pulumipkgs = new PublicRepo('pulumipkgs', {
 	description: 'Pulumi, providers, and plugins packaged for Nix',
 	topics: ['nix', 'nixpkgs', 'nix-flake', 'pulumi'],
