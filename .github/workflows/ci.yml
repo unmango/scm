@@ -15,6 +15,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  nix:
+    uses: unmango/ci/.github/workflows/nix-ci.yml@9a2a7f9018392f7e9413127df2b604519bbf5b5c
+    permissions:
+      checks: read
+      contents: read
+      pull-requests: write
+      statuses: read
+    secrets:
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+  required:
+    needs: [nix, pulumi]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: jq -e 'all(.[]; .result == "success" or .result == "skipped")' <<<"$NEEDS"
+
   pulumi:
     runs-on: thecluster
     concurrency:
