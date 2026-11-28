@@ -230,7 +230,6 @@ export const s4 = new PublicRepo('s4', {
 export const scm = new PublicRepo('scm', {
 	description: 'unmango source control infrastructure',
 	topics: ['pulumi', 'iac', 'github'],
-	githubChecks: ['pulumi'],
 });
 
 export const slip = new PublicRepo('slip', {
