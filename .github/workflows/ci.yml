@@ -15,11 +15,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  nix:
+    uses: unmango/ci/.github/workflows/nix-ci.yml@9a2a7f9018392f7e9413127df2b604519bbf5b5c
+    permissions:
+      checks: read
+      contents: read
+      pull-requests: write
+      statuses: read
+    secrets:
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+  required:
+    needs: [nix, pulumi]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: jq -e 'all(.[]; .result == "success" or .result == "skipped")' <<<"$NEEDS"
+
   pulumi:
+    if: github.event_name == 'pull_request'
     runs-on: thecluster
     concurrency:
       group: pulumi-prod
       queue: max
+    env:
+      PULUMI_FLAGS: ${{ github.actor == 'renovate[bot]' && '--expect-no-changes' || '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -33,11 +56,9 @@ jobs:
       # fails. The in-cluster ncps cache has been serving a truncated pulumi NAR; remove
       # --fallback once that cache is fixed.
       - name: Dprint check
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c dprint check
 
       - name: Lint
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c make lint
 
       - name: Pulumi login
@@ -47,20 +68,45 @@ jobs:
           requested-token-type: urn:pulumi:token-type:access_token:personal
           scope: user:UnstoppableMango
 
-      - name: Set Pulumi flags
-        run: |
-          flags=""
-          if [ "${{ github.actor }}" = "renovate[bot]" ]; then
-            flags="$flags --expect-no-changes"
-          fi
-          echo "PULUMI_FLAGS=$flags" >> "$GITHUB_ENV"
-
       - name: Preview
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c make preview
 
+  # Kept out of `required`, which gates merges, not deploys.
+  deploy:
+    needs: [nix]
+    if: github.event_name == 'push'
+    runs-on: thecluster
+    concurrency:
+      group: pulumi-prod
+      queue: max
+    env:
+      PULUMI_FLAGS: ${{ github.actor == 'renovate[bot]' && '--expect-no-changes' || '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: unmango/actions/setup-nix@e8bbcbd12a2c521c5cb36957c00a7a8f4fe2e766 # v2.0.0
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Gates finish out of order, so an older run must not undo a newer deploy.
+      - name: Check main is still this commit
+        id: main
+        run: |
+          sha=$(git ls-remote --exit-code origin refs/heads/main)
+          echo "sha=${sha%%[[:space:]]*}" >> "$GITHUB_OUTPUT"
+
+      - name: Pulumi login
+        if: steps.main.outputs.sha == github.sha
+        uses: pulumi/auth-actions@v2
+        with:
+          organization: UnstoppableMango
+          requested-token-type: urn:pulumi:token-type:access_token:personal
+          scope: user:UnstoppableMango
+
       - name: Deploy
-        if: github.event_name == 'push'
+        if: steps.main.outputs.sha == github.sha
+        run: nix develop --fallback -c make up
         env:
           PULUMI_FLAGS: --yes ${{ env.PULUMI_FLAGS }}
-        run: nix develop --fallback -c make up
