@@ -37,7 +37,7 @@ jobs:
 
   pulumi:
     if: github.event_name == 'pull_request'
-    runs-on: thecluster
+    runs-on: ubuntu-latest
     concurrency:
       group: pulumi-prod
       queue: max
@@ -52,14 +52,11 @@ jobs:
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # WORKAROUND: --fallback on every `nix develop` builds from source when a substitute
-      # fails. The in-cluster ncps cache has been serving a truncated pulumi NAR; remove
-      # --fallback once that cache is fixed.
       - name: Dprint check
-        run: nix develop --fallback -c dprint check
+        run: nix develop -c dprint check
 
       - name: Lint
-        run: nix develop --fallback -c make lint
+        run: nix develop -c make lint
 
       - name: Pulumi login
         uses: pulumi/auth-actions@v2
@@ -69,13 +66,13 @@ jobs:
           scope: user:UnstoppableMango
 
       - name: Preview
-        run: nix develop --fallback -c make preview
+        run: nix develop -c make preview
 
   # Kept out of `required`, which gates merges, not deploys.
   deploy:
     needs: [nix]
     if: github.event_name == 'push'
-    runs-on: thecluster
+    runs-on: ubuntu-latest
     concurrency:
       group: pulumi-prod
       queue: max
@@ -107,6 +104,6 @@ jobs:
 
       - name: Deploy
         if: steps.main.outputs.sha == github.sha
-        run: nix develop --fallback -c make up
+        run: nix develop -c make up
         env:
           PULUMI_FLAGS: --yes ${{ env.PULUMI_FLAGS }}
