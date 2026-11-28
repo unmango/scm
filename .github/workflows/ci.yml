@@ -93,7 +93,9 @@ jobs:
       # Gates finish out of order, so an older run must not undo a newer deploy.
       - name: Check main is still this commit
         id: main
-        run: echo "sha=$(git ls-remote origin refs/heads/main | cut -f1)" >> "$GITHUB_OUTPUT"
+        run: |
+          sha=$(git ls-remote --exit-code origin refs/heads/main)
+          echo "sha=${sha%%[[:space:]]*}" >> "$GITHUB_OUTPUT"
 
       - name: Pulumi login
         if: steps.main.outputs.sha == github.sha
