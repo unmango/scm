@@ -36,10 +36,13 @@ jobs:
         run: jq -e 'all(.[]; .result == "success" or .result == "skipped")' <<<"$NEEDS"
 
   pulumi:
+    if: github.event_name == 'pull_request'
     runs-on: thecluster
     concurrency:
       group: pulumi-prod
       queue: max
+    env:
+      PULUMI_FLAGS: ${{ github.actor == 'renovate[bot]' && '--expect-no-changes' || '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -53,11 +56,9 @@ jobs:
       # fails. The in-cluster ncps cache has been serving a truncated pulumi NAR; remove
       # --fallback once that cache is fixed.
       - name: Dprint check
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c dprint check
 
       - name: Lint
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c make lint
 
       - name: Pulumi login
@@ -67,20 +68,36 @@ jobs:
           requested-token-type: urn:pulumi:token-type:access_token:personal
           scope: user:UnstoppableMango
 
-      - name: Set Pulumi flags
-        run: |
-          flags=""
-          if [ "${{ github.actor }}" = "renovate[bot]" ]; then
-            flags="$flags --expect-no-changes"
-          fi
-          echo "PULUMI_FLAGS=$flags" >> "$GITHUB_ENV"
-
       - name: Preview
-        if: github.event_name == 'pull_request'
         run: nix develop --fallback -c make preview
 
+  # Kept out of `required`, which gates merges, not deploys.
+  deploy:
+    needs: [nix]
+    if: github.event_name == 'push'
+    runs-on: thecluster
+    concurrency:
+      group: pulumi-prod
+      queue: max
+    env:
+      PULUMI_FLAGS: ${{ github.actor == 'renovate[bot]' && '--expect-no-changes' || '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: unmango/actions/setup-nix@e8bbcbd12a2c521c5cb36957c00a7a8f4fe2e766 # v2.0.0
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pulumi login
+        uses: pulumi/auth-actions@v2
+        with:
+          organization: UnstoppableMango
+          requested-token-type: urn:pulumi:token-type:access_token:personal
+          scope: user:UnstoppableMango
+
       - name: Deploy
-        if: github.event_name == 'push'
+        run: nix develop --fallback -c make up
         env:
           PULUMI_FLAGS: --yes ${{ env.PULUMI_FLAGS }}
-        run: nix develop --fallback -c make up
